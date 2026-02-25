@@ -1,7 +1,7 @@
-## `foundry-toolchain` Action
+## `monad-foundry-toolchain` Action
 
-This GitHub Action installs [Foundry](https://github.com/foundry-rs/foundry), the blazing fast, portable and modular
-toolkit for Ethereum application development.
+This GitHub Action installs [Monad Foundry](https://github.com/category-labs/foundry), a Monad-native fork of Foundry
+with built-in Monad EVM support, staking precompiles, and monad-specific cheatcodes.
 
 ### Example workflow
 
@@ -30,8 +30,8 @@ jobs:
           persist-credentials: false
           submodules: recursive
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+      - name: Install Monad Foundry
+        uses: category-labs/foundry-toolchain@v1
 
       - name: Show Forge version
         run: forge --version
@@ -46,15 +46,27 @@ jobs:
         run: forge test -vvv
 ```
 
+### Using standard Foundry (Ethereum)
+
+To install standard Foundry instead of Monad Foundry, override the `version` and `network` inputs:
+
+```yml
+- name: Install Foundry
+  uses: category-labs/foundry-toolchain@v1
+  with:
+    version: stable
+    network: ethereum
+```
+
 ### Inputs
 
-| **Name**             | **Required** | **Default**                           | **Description**                                                                                                                                       | **Type** |
-| -------------------- | ------------ | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `version`            | No           | `stable`                              | Version to install, e.g. `stable`, `rc`, `nightly` or any [SemVer](https://semver.org/) version with or without `v` prefix (e.g. `v1.5.0` or `1.5.0`) | string   |
-| `network`            | No           | `ethereum`                            | Network version to install, e.g. `ethereum`, `tempo`.                                                                                                 | string   |
-| `cache`              | No           | `true`                                | Whether to cache Foundry data or not.                                                                                                                 | bool     |
-| `cache-key`          | No           | `${{ github.job }}-${{ github.sha }}` | The cache key to use for caching.                                                                                                                     | string   |
-| `cache-restore-keys` | No           | `[${{ github.job }}-]`                | The cache keys to use for restoring the cache.                                                                                                        | string[] |
+| **Name**             | **Required** | **Default**                           | **Description**                                                                                                                                                     | **Type** |
+| -------------------- | ------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `version`            | No           | `stable-monad`                        | Version to install, e.g. `stable-monad`, `nightly`, or a specific version. For standard Foundry use `stable`, `rc`, or a SemVer version (e.g. `v1.5.0` or `1.5.0`). | string   |
+| `network`            | No           | `monad`                               | Network version to install, e.g. `monad`, `ethereum`, `tempo`.                                                                                                      | string   |
+| `cache`              | No           | `true`                                | Whether to cache Foundry data or not.                                                                                                                               | bool     |
+| `cache-key`          | No           | `${{ github.job }}-${{ github.sha }}` | The cache key to use for caching.                                                                                                                                   | string   |
+| `cache-restore-keys` | No           | `[${{ github.job }}-]`                | The cache keys to use for restoring the cache.                                                                                                                      | string[] |
 
 ### Caching
 
@@ -72,8 +84,8 @@ If you would like to disable the caching (e.g. because you want to implement you
 the `cache` input to `false`, like this:
 
 ```yml
-- name: Install Foundry
-  uses: foundry-rs/foundry-toolchain@v1
+- name: Install Monad Foundry
+  uses: category-labs/foundry-toolchain@v1
   with:
     cache: false
 ```
@@ -89,16 +101,16 @@ For instance, if you wish to utilize a shared cache between two distinct jobs, t
 applied:
 
 ```yml
-- name: Install Foundry
-  uses: foundry-rs/foundry-toolchain@v1
+- name: Install Monad Foundry
+  uses: category-labs/foundry-toolchain@v1
   with:
     cache-key: custom-seed-test-${{ github.sha }}
     cache-restore-keys: |-
       custom-seed-test-
       custom-seed-
 ---
-- name: Install Foundry
-  uses: foundry-rs/foundry-toolchain@v1
+- name: Install Monad Foundry
+  uses: category-labs/foundry-toolchain@v1
   with:
     cache-key: custom-seed-coverage-${{ github.sha }}
     cache-restore-keys: |-

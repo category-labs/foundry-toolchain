@@ -8,7 +8,7 @@ import type { IncomingMessage } from "http";
 
 import { restoreCache } from "./cache.js";
 
-const FOUNDRYUP_INSTALLER_URL = "https://raw.githubusercontent.com/foundry-rs/foundry/HEAD/foundryup/install";
+const FOUNDRYUP_INSTALLER_URL = "https://raw.githubusercontent.com/category-labs/foundry/monad/foundryup/install";
 const FOUNDRY_DIR = path.join(os.homedir(), ".foundry");
 const FOUNDRY_BIN = path.join(FOUNDRY_DIR, "bin");
 const FOUNDRY_TOOLS = ["forge", "cast", "anvil", "chisel"];
@@ -51,16 +51,17 @@ async function download(url: string, dest: string, retries = 3): Promise<void> {
 
 function buildFoundryupArgs(): string[] {
   const args: string[] = [];
-  let version = core.getInput("version");
-  const network = core.getInput("network");
+  let version = core.getInput("version") || "stable-monad";
+  const network = core.getInput("network") || "monad";
 
   // Strip 'v' prefix from version if present (e.g., "v1.3.6" -> "1.3.6").
-  if (version && version.startsWith("v")) {
+  if (version.startsWith("v")) {
     version = version.slice(1);
   }
 
-  if (version && version !== "stable") args.push("--install", version);
-  if (network && network !== "ethereum") args.push("--network", network);
+  // Always pass both flags explicitly so the monad foundryup knows exactly what to install.
+  args.push("--install", version);
+  args.push("--network", network);
 
   return args;
 }
@@ -84,8 +85,8 @@ function run(cmd: string, ignoreShellError = false): void {
 
 async function main(): Promise<void> {
   try {
-    const version = core.getInput("version") || "stable";
-    const network = core.getInput("network") || "ethereum";
+    const version = core.getInput("version") || "stable-monad";
+    const network = core.getInput("network") || "monad";
     core.info(`Installing Foundry (version: ${version}, network: ${network})`);
 
     // Download and run the installer.

@@ -48365,7 +48365,7 @@ const https = __importStar(__nccwpck_require__(65692));
 const os = __importStar(__nccwpck_require__(70857));
 const path = __importStar(__nccwpck_require__(16928));
 const cache_js_1 = __nccwpck_require__(97377);
-const FOUNDRYUP_INSTALLER_URL = "https://raw.githubusercontent.com/foundry-rs/foundry/HEAD/foundryup/install";
+const FOUNDRYUP_INSTALLER_URL = "https://raw.githubusercontent.com/category-labs/foundry/monad/foundryup/install";
 const FOUNDRY_DIR = path.join(os.homedir(), ".foundry");
 const FOUNDRY_BIN = path.join(FOUNDRY_DIR, "bin");
 const FOUNDRY_TOOLS = ["forge", "cast", "anvil", "chisel"];
@@ -48407,16 +48407,15 @@ async function download(url, dest, retries = 3) {
 }
 function buildFoundryupArgs() {
     const args = [];
-    let version = core.getInput("version");
-    const network = core.getInput("network");
+    let version = core.getInput("version") || "stable-monad";
+    const network = core.getInput("network") || "monad";
     // Strip 'v' prefix from version if present (e.g., "v1.3.6" -> "1.3.6").
-    if (version && version.startsWith("v")) {
+    if (version.startsWith("v")) {
         version = version.slice(1);
     }
-    if (version && version !== "stable")
-        args.push("--install", version);
-    if (network && network !== "ethereum")
-        args.push("--network", network);
+    // Always pass both flags explicitly so the monad foundryup knows exactly what to install.
+    args.push("--install", version);
+    args.push("--network", network);
     return args;
 }
 function run(cmd, ignoreShellError = false) {
@@ -48440,8 +48439,8 @@ function run(cmd, ignoreShellError = false) {
 }
 async function main() {
     try {
-        const version = core.getInput("version") || "stable";
-        const network = core.getInput("network") || "ethereum";
+        const version = core.getInput("version") || "stable-monad";
+        const network = core.getInput("network") || "monad";
         core.info(`Installing Foundry (version: ${version}, network: ${network})`);
         // Download and run the installer.
         const installer = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "foundryup-")), "install");
