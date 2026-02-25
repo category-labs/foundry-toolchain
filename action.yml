@@ -1,26 +1,27 @@
-name: "foundry-toolchain"
-description: "Install Foundry"
-author: "Foundry"
+name: "monad-foundry-toolchain"
+description: "Install Monad Foundry"
+author: "Category Labs"
 branding:
   color: "gray-dark"
   icon: "play-circle"
 
 inputs:
   version:
-    default: "stable"
+    default: "stable-monad"
     description: |
       Foundry version to install. Passed to `foundryup --install <version>`.
 
-      This version number has to match a released version of Foundry.
-      The default value is `stable`, which will pull the latest stable build.
-      Other options include `nightly`, `rc`, or a specific version like `v1.3.6`.
+      This version number has to match a released version of Monad Foundry.
+      The default value is `stable-monad`, which will pull the latest stable Monad build.
+      Other options include `nightly` or a specific version.
+      For standard Foundry, use `stable`, `rc`, or a specific version like `v1.3.6`.
     required: false
   network:
-    default: "ethereum"
+    default: "monad"
     description: |
       Network to install Foundry for. Passed to `foundryup --network <network>`.
 
-      This can be either `ethereum` or `tempo`. The default value is `ethereum`.
+      This can be `monad`, `ethereum`, or `tempo`. The default value is `monad`.
     required: false
   cache:
     default: "true"
